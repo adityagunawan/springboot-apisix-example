@@ -17,7 +17,7 @@ Write-Host "Creating upstreams and routes via $adminUrl"
 Put 'upstreams/user-service' @{ type = 'roundrobin'; nodes = @{ 'user-service:8081' = 1 } }
 
 Put 'routes/user-service' @{
-  uris        = @('/users', '/users/*')
+  uris        = @('/users', '/users/*', '/profile')
   methods     = @('GET')
   name        = 'user-service-route'
   priority    = 10

@@ -11,7 +11,7 @@ public class SecurityConfig {
   @Bean
   public FilterRegistrationBean<BearerAuthFilter> bearerAuthFilter(AuthProperties properties) {
     FilterRegistrationBean<BearerAuthFilter> registration = new FilterRegistrationBean<>();
-    registration.setFilter(new BearerAuthFilter(properties.getApiToken()));
+    registration.setFilter(new BearerAuthFilter(properties.getJwtSecret()));
     registration.addUrlPatterns("/*");
     registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
     return registration;

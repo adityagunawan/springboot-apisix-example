@@ -21,7 +21,7 @@ curl -sSf -X PUT "$ADMIN_URL/routes/user-service" \
   -H "Content-Type: application/json" \
   -d @- <<JSON
 {
-  "uris": ["/users", "/users/*"],
+  "uris": ["/users", "/users/*", "/profile"],
   "methods": ["GET"],
   "name": "user-service-route",
   "priority": 10,

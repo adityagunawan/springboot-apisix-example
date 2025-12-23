@@ -27,18 +27,25 @@ docker compose ps
 
 4) Uji cepat lewat gateway (port 9080)
 ```bash
-# Login (cred demo: admin/password) untuk dapat bearer token
+# Login (cred demo: admin/password) untuk dapat JWT
 curl -X POST http://localhost:9080/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"password"}'
+# response contoh:
+# { "token": "<jwt>", "type": "bearer", "expiresInSeconds": 3600,
+#   "user": { "username": "admin", "email": "admin@example.com", "fullName": "Admin User", "organization": "Example Corp" } }
 
-# Gunakan token (default: dev-secret-token) ke endpoint user
+# Gunakan JWT ke endpoint user
 curl http://localhost:9080/users \
-  -H "Authorization: Bearer dev-secret-token"
+  -H "Authorization: Bearer <jwt>"
 
 # Contoh ambil detail order
 curl http://localhost:9080/orders/101 \
-  -H "Authorization: Bearer dev-secret-token"
+  -H "Authorization: Bearer <jwt>"
+
+# Profil current user dari token
+curl http://localhost:9080/profile \
+  -H "Authorization: Bearer <jwt>"
 ```
 
 ## Menjalankan service langsung (opsional, tanpa Docker)
@@ -67,3 +74,4 @@ Gateway APISIX tetap harus dijalankan via Docker agar routing berjalan, lalu jal
 - Header `Authorization: Bearer <token>` wajib untuk semua endpoint selain `/login` dan `/actuator`.
 - Ganti `API_TOKEN` di `docker-compose.yml` bila perlu; sesuaikan `create-routes.sh` jika mengubah admin URL/key.
 - Port etcd tidak diekspos ke host (menghindari bentrok port 2379 Windows); APISIX mengakses langsung lewat jaringan internal Docker.
+- JWT secret default: `JWT_SECRET=dev-jwt-secret-change-me-please-32-chars` (set di `docker-compose.yml`); gunakan nilai minimal 32 karakter untuk HS256.
