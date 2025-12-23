@@ -82,3 +82,4 @@ Gateway APISIX tetap harus dijalankan via Docker agar routing berjalan, lalu jal
 - Port etcd tidak diekspos ke host (menghindari bentrok port 2379 Windows); APISIX mengakses langsung lewat jaringan internal Docker.
 - JWT secret default: `JWT_SECRET=dev-jwt-secret-change-me-please-32-chars` (set di `docker-compose.yml`); gunakan nilai minimal 32 karakter untuk HS256.
 - Kedua service kini memakai H2 in-memory + Spring Data JPA; data awal ada di `src/main/resources/data.sql`. Endpoint order sudah mendukung CRUD dengan validasi request.
+- Untuk debugging service secara terpisah, Anda bisa hanya menyalakan APISIX + etcd dengan `docker compose up -d etcd apisix`, jalankan service Spring Boot secara lokal (mvn spring-boot:run), lalu jalankan skrip route.
