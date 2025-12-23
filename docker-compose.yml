@@ -6,6 +6,8 @@ services:
       - ETCD_ENABLE_V2=false
       - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
       - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+    volumes:
+      - etcd-data:/bitnami/etcd
     healthcheck:
       test: [ "CMD", "etcdctl", "endpoint", "health" ]
       interval: 5s
@@ -44,3 +46,6 @@ services:
       - JWT_SECRET=dev-jwt-secret-change-me-please-32-chars
     ports:
       - "8082:8082"
+
+volumes:
+  etcd-data:
