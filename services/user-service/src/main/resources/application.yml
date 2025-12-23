@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: user-service
+
+server:
+  port: ${SERVER_PORT:8081}
+
+security:
+  api-token: ${API_TOKEN:dev-secret-token}

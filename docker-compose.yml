@@ -1,0 +1,44 @@
+services:
+  etcd:
+    image: bitnamilegacy/etcd:3.5.11
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ENABLE_V2=false
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+    healthcheck:
+      test: [ "CMD", "etcdctl", "endpoint", "health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  apisix:
+    image: apache/apisix:latest
+    depends_on:
+      etcd:
+        condition: service_healthy
+    volumes:
+      - type: bind
+        source: ./apisix/config.yaml
+        target: /usr/local/apisix/conf/config.yaml
+        read_only: true
+    ports:
+      - "9080:9080"
+      - "9180:9180"
+    restart: unless-stopped
+
+  user-service:
+    build: ./services/user-service
+    environment:
+      - SERVER_PORT=8081
+      - API_TOKEN=dev-secret-token
+    ports:
+      - "8081:8081"
+
+  order-service:
+    build: ./services/order-service
+    environment:
+      - SERVER_PORT=8082
+      - API_TOKEN=dev-secret-token
+    ports:
+      - "8082:8082"

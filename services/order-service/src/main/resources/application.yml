@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: order-service
+
+server:
+  port: ${SERVER_PORT:8082}
+
+security:
+  api-token: ${API_TOKEN:dev-secret-token}
