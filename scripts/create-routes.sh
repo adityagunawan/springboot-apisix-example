@@ -58,7 +58,7 @@ curl -sSf -X PUT "$ADMIN_URL/routes/order-service" \
   -d @- <<JSON
 {
   "uris": ["/orders", "/orders/*"],
-  "methods": ["GET"],
+  "methods": ["GET", "POST", "PUT", "DELETE"],
   "name": "order-service-route",
   "upstream_id": "order-service"
 }

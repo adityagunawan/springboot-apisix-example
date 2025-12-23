@@ -36,7 +36,7 @@ Put 'upstreams/order-service' @{ type = 'roundrobin'; nodes = @{ 'order-service:
 
 Put 'routes/order-service' @{
   uris        = @('/orders', '/orders/*')
-  methods     = @('GET')
+  methods     = @('GET', 'POST', 'PUT', 'DELETE')
   name        = 'order-service-route'
   upstream_id = 'order-service'
 }

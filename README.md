@@ -46,6 +46,12 @@ curl http://localhost:9080/orders/101 \
 # Profil current user dari token
 curl http://localhost:9080/profile \
   -H "Authorization: Bearer <jwt>"
+
+# Buat order baru
+curl -X POST http://localhost:9080/orders \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <jwt>" \
+  -d '{"userId":3,"total":10.5,"date":"2025-01-01","status":"NEW"}'
 ```
 
 ## Menjalankan service langsung (opsional, tanpa Docker)
@@ -75,3 +81,4 @@ Gateway APISIX tetap harus dijalankan via Docker agar routing berjalan, lalu jal
 - Ganti `API_TOKEN` di `docker-compose.yml` bila perlu; sesuaikan `create-routes.sh` jika mengubah admin URL/key.
 - Port etcd tidak diekspos ke host (menghindari bentrok port 2379 Windows); APISIX mengakses langsung lewat jaringan internal Docker.
 - JWT secret default: `JWT_SECRET=dev-jwt-secret-change-me-please-32-chars` (set di `docker-compose.yml`); gunakan nilai minimal 32 karakter untuk HS256.
+- Kedua service kini memakai H2 in-memory + Spring Data JPA; data awal ada di `src/main/resources/data.sql`. Endpoint order sudah mendukung CRUD dengan validasi request.

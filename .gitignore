@@ -18,3 +18,6 @@ Thumbs.db
 
 # Spring Boot
 *.pid
+
+# App logs
+logs/
