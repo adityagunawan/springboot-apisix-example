@@ -1,5 +1,6 @@
 package com.example.orderservice.order;
 
+import com.example.common.response.StandardResponse;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -38,21 +39,18 @@ public class OrderController {
     OrderDto created = orderService.create(request);
     return ResponseEntity
         .created(URI.create("/orders/" + created.id()))
-        .body(com.example.orderservice.common.StandardResponse.success(
-            201, "order created", created));
+        .body(StandardResponse.success(201, "order created", created));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<?> updateOrder(@PathVariable long id, @Valid @RequestBody OrderRequest request) {
     OrderDto updated = orderService.update(id, request);
-    return ResponseEntity.ok(com.example.orderservice.common.StandardResponse.success(
-        200, "order updated", updated));
+    return ResponseEntity.ok(StandardResponse.success(200, "order updated", updated));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteOrder(@PathVariable long id) {
     orderService.delete(id);
-    return ResponseEntity.ok(com.example.orderservice.common.StandardResponse.success(
-        200, "order deleted", null));
+    return ResponseEntity.ok(StandardResponse.success(200, "order deleted", null));
   }
 }

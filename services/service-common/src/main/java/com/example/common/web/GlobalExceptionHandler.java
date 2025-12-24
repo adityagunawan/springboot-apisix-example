@@ -1,5 +1,7 @@
-package com.example.userservice.common;
+package com.example.common.web;
 
+import com.example.common.response.ErrorDetail;
+import com.example.common.response.StandardResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

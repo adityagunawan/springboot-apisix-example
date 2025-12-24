@@ -1,4 +1,4 @@
-package com.example.userservice.common;
+package com.example.common.response;
 
 public class ErrorDetail {
   private String code;

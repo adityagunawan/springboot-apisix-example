@@ -1,5 +1,8 @@
-package com.example.userservice.security;
+package com.example.common.security;
 
+import com.example.common.response.ErrorDetail;
+import com.example.common.response.StandardResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -9,13 +12,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.userservice.common.StandardResponse;
-import com.example.userservice.common.ErrorDetail;
 
 /**
  * JWT bearer filter to protect API endpoints.
@@ -23,10 +25,12 @@ import com.example.userservice.common.ErrorDetail;
 public class BearerAuthFilter extends OncePerRequestFilter {
 
   private final String jwtSecret;
+  private final List<String> permitAll;
   private final ObjectMapper objectMapper = new ObjectMapper();
 
-  public BearerAuthFilter(String jwtSecret) {
+  public BearerAuthFilter(String jwtSecret, List<String> permitAll) {
     this.jwtSecret = jwtSecret;
+    this.permitAll = permitAll;
   }
 
   @Override
@@ -50,9 +54,7 @@ public class BearerAuthFilter extends OncePerRequestFilter {
           .parseClaimsJws(token)
           .getBody();
 
-      // You can put user info into request attributes if needed later
       request.setAttribute("user", claims);
-
       filterChain.doFilter(request, response);
     } catch (Exception e) {
       unauthorized(request, response, "Invalid or expired token");
@@ -61,11 +63,11 @@ public class BearerAuthFilter extends OncePerRequestFilter {
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-    // Allow login, health, and preflight requests without auth
     String path = request.getRequestURI();
-    return "OPTIONS".equalsIgnoreCase(request.getMethod())
-        || path.startsWith("/login")
-        || path.startsWith("/actuator");
+    if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+      return true;
+    }
+    return permitAll.stream().filter(Objects::nonNull).anyMatch(path::startsWith);
   }
 
   private void unauthorized(HttpServletRequest request, HttpServletResponse response) throws IOException {

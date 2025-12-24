@@ -1,8 +1,9 @@
 package com.example.userservice.auth;
 
-import com.example.userservice.security.AuthProperties;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.example.common.response.StandardResponse;
+import com.example.common.security.AuthProperties;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -48,12 +49,9 @@ public class LoginController {
           .compact();
 
       TokenResponse tokenResponse = new TokenResponse(token, "bearer", TOKEN_TTL.toSeconds(), user);
-      return ResponseEntity.ok(com.example.userservice.common.StandardResponse.success(
-          200, "login success", tokenResponse));
+      return ResponseEntity.ok(StandardResponse.success(200, "login success", tokenResponse));
     }
-    return ResponseEntity.status(401).body(
-        com.example.userservice.common.StandardResponse.error(
-            401, "Invalid credentials", null));
+    return ResponseEntity.status(401).body(StandardResponse.error(401, "Invalid credentials", null));
   }
 
   public record LoginRequest(String username, String password) {}

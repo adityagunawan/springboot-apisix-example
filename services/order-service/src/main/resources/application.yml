@@ -22,3 +22,5 @@ server:
 security:
   api-token: ${API_TOKEN:dev-secret-token}
   jwt-secret: ${JWT_SECRET:dev-jwt-secret-change-me-please-32-chars}
+  permit-all:
+    - /actuator

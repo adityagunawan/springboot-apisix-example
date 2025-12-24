@@ -1,4 +1,4 @@
-package com.example.orderservice.common;
+package com.example.common.response;
 
 public class StandardResponse<T> {
 
