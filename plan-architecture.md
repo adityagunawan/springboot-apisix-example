@@ -35,11 +35,11 @@ Dokumen ini digunakan sebagai:
 
 ### 3.1 Edge & Access Layer
 
-| Nama Service         | Tipe | Fungsi Utama | Handle |
-|----------------------|------|--------------|--------|
+| Nama Service | Tipe | Fungsi Utama | Handle |
+|--------------|------|--------------|--------|
 | api-gateway (APISIX) | Edge | Gerbang request | JWT verification, routing, rate limit, inject header |
-| cms-bff-service      | BFF | Backend khusus CMS | Endpoint CMS, channel validation (CMS), orchestration |
-| mpos-bff-service     | BFF | Backend khusus Mpos | Endpoint Mpos, channel validation (Mpos), response shaping |
+| cms-service  | BFF | Backend khusus CMS | Endpoint CMS, channel validation (CMS), orchestration |
+| mpos-service | BFF | Backend khusus Mpos | Endpoint Mpos, channel validation (Mpos), response shaping |
 
 ---
 
@@ -84,10 +84,10 @@ Catatan:
 
 ### 4.1 Endpoint Publik (Client-facing)
 
-| Service          | Endpoint Prefix | Dipanggil Oleh |
-|------------------|-----------------|---------------|
-| cms-bff-service  | `/cms/**` | CMS Web |
-| mpos-bff-service | `/mpos/**` | mpos App |
+| Service      | Endpoint Prefix | Dipanggil Oleh |
+|--------------|-----------------|---------------|
+| cms-service  | `/cms/**` | CMS Web |
+| mpos-service | `/mpos/**` | mpos App |
 | identity-service | `/auth/**` | CMS & Mpos |
 
 ---
