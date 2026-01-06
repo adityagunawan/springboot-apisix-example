@@ -1,6 +1,6 @@
 # Spring Boot + APISIX Boilerplate
 
-Proyek contoh dua microservice Spring Boot (user-service & order-service) di belakang API Gateway Apache APISIX menggunakan Docker Compose.
+Proyek contoh tiga microservice Spring Boot (identity-service, cms-service, mpos-service) di belakang API Gateway Apache APISIX menggunakan Docker Compose.
 
 ## Prasyarat
 - Docker & Docker Compose.
@@ -28,40 +28,39 @@ docker compose ps
 4) Uji cepat lewat gateway (port 9080)
 ```bash
 # Login (cred demo: admin/password) untuk dapat JWT
-curl -X POST http://localhost:9080/login \
+curl -X POST http://localhost:9080/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"password"}'
 # response contoh:
 # { "token": "<jwt>", "type": "bearer", "expiresInSeconds": 3600,
 #   "user": { "username": "admin", "email": "admin@example.com", "fullName": "Admin User", "organization": "Example Corp" } }
 
-# Gunakan JWT ke endpoint user
-curl http://localhost:9080/users \
+# Gunakan JWT ke endpoint cms
+curl http://localhost:9080/cms/items \
   -H "Authorization: Bearer <jwt>"
 
-# Contoh ambil detail order
-curl http://localhost:9080/orders/101 \
+# Contoh ambil data transaksi mpos
+curl http://localhost:9080/mpos/transactions \
   -H "Authorization: Bearer <jwt>"
 
 # Profil current user dari token
-curl http://localhost:9080/profile \
+curl http://localhost:9080/auth/profile \
   -H "Authorization: Bearer <jwt>"
 
-# Buat order baru
-curl -X POST http://localhost:9080/orders \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <jwt>" \
-  -d '{"userId":3,"total":10.5,"date":"2025-01-01","status":"NEW"}'
 ```
 
 ## Menjalankan service langsung (opsional, tanpa Docker)
 ```bash
 # Terminal 1
-cd services/user-service
+cd services/identity-service
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 
 # Terminal 2
-cd services/order-service
+cd services/cms-service
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+
+# Terminal 3
+cd services/mpos-service
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 Gunakan env var bila perlu:
@@ -71,15 +70,15 @@ SERVER_PORT=8081 API_TOKEN=dev-secret-token mvn spring-boot:run
 Gateway APISIX tetap harus dijalankan via Docker agar routing berjalan, lalu jalankan `scripts/create-routes.sh` seperti di atas.
 
 ## Struktur penting
-- `docker-compose.yml` — orkestrasi APISIX, etcd, dan kedua service.
+- `docker-compose.yml` — orkestrasi APISIX, etcd, dan ketiga service.
 - `apisix/config.yaml` — konfigurasi APISIX admin & koneksi etcd.
 - `scripts/create-routes.sh` — registrasi upstream/route di APISIX.
-- `services/user-service`, `services/order-service` — kode Spring Boot.
+- `services/identity-service`, `services/cms-service`, `services/mpos-service` — kode Spring Boot.
 
 ## Catatan
-- Header `Authorization: Bearer <token>` wajib untuk semua endpoint selain `/login` dan `/actuator`.
+- Header `Authorization: Bearer <token>` wajib untuk semua endpoint selain `/auth/login` dan `/actuator`.
 - Ganti `API_TOKEN` di `docker-compose.yml` bila perlu; sesuaikan `create-routes.sh` jika mengubah admin URL/key.
 - Port etcd tidak diekspos ke host (menghindari bentrok port 2379 Windows); APISIX mengakses langsung lewat jaringan internal Docker.
 - JWT secret default: `JWT_SECRET=dev-jwt-secret-change-me-please-32-chars` (set di `docker-compose.yml`); gunakan nilai minimal 32 karakter untuk HS256.
-- Kedua service kini memakai H2 in-memory + Spring Data JPA; data awal ada di `src/main/resources/data.sql`. Endpoint order sudah mendukung CRUD dengan validasi request.
+- Ketiga service kini memakai H2 in-memory + Spring Data JPA; data awal ada di `src/main/resources/data.sql`.
 - Untuk debugging service secara terpisah, Anda bisa hanya menyalakan APISIX + etcd dengan `docker compose up -d etcd apisix`, jalankan service Spring Boot secara lokal (mvn spring-boot:run), lalu jalankan skrip route.

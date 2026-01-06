@@ -29,8 +29,8 @@ services:
       - "9180:9180"
     restart: unless-stopped
 
-  user-service:
-    build: ./services/user-service
+  identity-service:
+    build: ./services/identity-service
     environment:
       - SERVER_PORT=8081
       - API_TOKEN=dev-secret-token
@@ -38,14 +38,23 @@ services:
     ports:
       - "8081:8081"
 
-  order-service:
-    build: ./services/order-service
+  cms-service:
+    build: ./services/cms-service
     environment:
       - SERVER_PORT=8082
       - API_TOKEN=dev-secret-token
       - JWT_SECRET=dev-jwt-secret-change-me-please-32-chars
     ports:
       - "8082:8082"
+
+  mpos-service:
+    build: ./services/mpos-service
+    environment:
+      - SERVER_PORT=8083
+      - API_TOKEN=dev-secret-token
+      - JWT_SECRET=dev-jwt-secret-change-me-please-32-chars
+    ports:
+      - "8083:8083"
 
 volumes:
   etcd-data:
