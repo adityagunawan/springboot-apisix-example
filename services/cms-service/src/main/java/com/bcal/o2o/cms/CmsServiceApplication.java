@@ -1,12 +1,12 @@
-package com.bcal.o2o.identity;
+package com.bcal.o2o.cms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UserServiceApplication {
+public class CmsServiceApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(UserServiceApplication.class, args);
+    SpringApplication.run(CmsServiceApplication.class, args);
   }
 }

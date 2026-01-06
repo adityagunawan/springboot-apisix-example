@@ -1,1 +1,12 @@
-// Placeholder after package path migration.
+package com.bcal.o2o.identity;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class IdentityServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(IdentityServiceApplication.class, args);
+    }
+}

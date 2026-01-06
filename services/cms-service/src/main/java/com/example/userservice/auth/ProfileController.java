@@ -1,5 +1,0 @@
-package com.bcal.o2o.cms.auth;
-
-class ProfileController {
-  // Placeholder to keep auth package out of the public API for cms-service.
-}
