@@ -4,6 +4,7 @@ target/
 
 # IDE files
 .idea/
+.claude/
 *.iml
 .project
 .classpath
