@@ -11,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 public class LoginController {
 
-  private static final Logger log = LoggerFactory.getLogger(LoginController.class);
   private final AuthProperties authProperties;
   private final MasterDataClient masterDataClient;
   private final org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder passwordEncoder;

@@ -1,33 +1,23 @@
-package com.bcal.o2o.masterdata.user;
+package com.bcal.o2o.masterdata.entities;
 
-public class UserDto {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "users")
+public class UserEntity {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   private String name;
   private String email;
   private String passwordHash;
   private String organization;
-
-  public UserDto() {
-  }
-
-  public UserDto(Long id, String name, String email, String passwordHash, String organization) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-    this.passwordHash = passwordHash;
-    this.organization = organization;
-  }
-
-  public static UserDto fromEntity(UserEntity entity) {
-    return new UserDto(
-      entity.getId(),
-      entity.getName(),
-      entity.getEmail(),
-      entity.getPasswordHash(),
-      entity.getOrganization()
-    );
-  }
 
   public Long getId() {
     return id;

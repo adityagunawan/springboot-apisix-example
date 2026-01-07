@@ -1,4 +1,4 @@
-package com.bcal.o2o.masterdata.cmsitem;
+package com.bcal.o2o.masterdata.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

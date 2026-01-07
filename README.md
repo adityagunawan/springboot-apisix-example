@@ -1,6 +1,6 @@
 # Spring Boot + APISIX Boilerplate
 
-Proyek contoh tiga microservice Spring Boot (identity-service, cms-service, mpos-service) di belakang API Gateway Apache APISIX menggunakan Docker Compose.
+microservice Spring Boot (identity-service, cms-service, mpos-service) di belakang API Gateway Apache APISIX menggunakan Docker Compose.
 
 ## Prasyarat
 - Docker & Docker Compose.

@@ -1,5 +1,6 @@
-package com.bcal.o2o.masterdata.user;
+package com.bcal.o2o.masterdata.entities.repositories;
 
+import com.bcal.o2o.masterdata.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
