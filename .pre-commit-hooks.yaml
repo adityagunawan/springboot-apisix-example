@@ -1,0 +1,156 @@
+- id: check-commit-message
+  name: check commit message
+  entry: check-commit-message
+  language: golang
+  description: >
+    Check commit message
+    Arguments:
+      - "--author" to allow authors
+      - "--trello" to allow Trello ID
+  fail_fast: true
+  stages: [commit-msg]
+- id: go-lint
+  name: Go lint
+  entry: go-lint
+  language: golang
+  description: >
+    Lint with golangci-lint
+    Requires:
+      - https://golangci-lint.run/
+    Sample .golangci.yml
+      run:
+        timeout: 5m
+        issues-exit-code: 2
+      linters:
+        enable:
+          - gocritic
+          - gocyclo
+          - gofmt
+          - goimports
+          - gomodguard
+          - gosec
+          - gosimple
+          - govet
+          - ineffassign
+          - staticcheck
+          - typecheck
+          - unused
+        disable:
+          - errcheck
+  fail_fast: true
+  stages: [pre-commit]
+- id: nodejs-lint
+  name: NodeJS lint
+  entry: nodejs-lint
+  language: golang
+  description: >
+    Lint with typescript-eslint
+    Requires:
+      - https://typescript-eslint.io/getting-started/
+    Sample .eslintrc.js
+      module.exports = {
+        parser: '@typescript-eslint/parser',
+        plugins: ['@typescript-eslint'],
+        extends: [
+          'eslint:recommended',
+          'plugin:@typescript-eslint/recommended',
+        ],
+        rules: {
+          '@typescript-eslint/no-unused-vars': 'error',
+          // Add more rules as needed
+        },
+      };
+  fail_fast: true
+  stages: [pre-commit]
+- id: php-lint
+  name: PHP lint
+  entry: php-lint
+  language: golang
+  description: Lint with Laravel Pint, requires https://github.com/laravel/pint
+  fail_fast: true
+  stages: [pre-commit]
+- id: go-scan-vulnerabilities
+  name: Go scan vulnerabilities
+  entry: go-scan-vulnerabilities
+  language: golang
+  description: Scan vulnerabilities with govulncheck, requires https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck
+  fail_fast: true
+  stages: [pre-commit]
+- id: go-test
+  name: Go test
+  entry: go-test
+  language: golang
+  exclude: '^.*.out'
+  description: Run Go unit tests and generate test coverage
+  fail_fast: true
+  stages: [pre-commit]
+- id: nodejs-test
+  name: NodeJS test
+  entry: nodejs-test
+  language: golang
+  description: Run NodeJS unit tests and generate test coverage
+  fail_fast: true
+  stages: [pre-commit]
+- id: php-test
+  name: PHP test
+  entry: php-test
+  language: golang
+  description: Run PHP unit tests and generate test coverage
+  fail_fast: true
+  stages: [pre-commit]
+- id: scan-quality
+  name: scan quality
+  entry: scan-quality
+  language: golang
+  description: >
+    Scan quality with local SonarQube and SonarScanner CLI
+    Requires:
+      - https://docs.sonarsource.com/sonarqube/9.9/try-out-sonarqube/
+      - https://docs.sonarcloud.io/advanced-setup/ci-based-analysis/sonarscanner-cli/
+    Environment variables:
+      - SONAR_HOST_URL
+      - SONAR_LOGIN
+  fail_fast: true
+  stages: [pre-commit]
+- id: migrate-up
+  name: migrate up
+  entry: migrate-up
+  language: golang
+  description: >
+    Migrate upwards for integration and performance tests with GoLang Migrate CLI and local MySQL
+    Requires:
+      - https://github.com/golang-migrate/migrate
+      - Migration files on tools/mysql/
+    Environment variables:
+      - DATABASE_TEST, eg; root:root@/test
+      - MIGRATE_PATH, eg; tools/mysql
+  fail_fast: true
+  stages: [pre-commit]
+- id: go-integration-test
+  name: Go integration test
+  entry: go-integration-test
+  language: golang
+  description: Run Go integration tests
+  fail_fast: true
+  stages: [pre-commit]
+- id: go-performance-test
+  name: Go performance test
+  entry: go-performance-test
+  language: golang
+  description: Run Go performance tests
+  fail_fast: true
+  stages: [pre-commit]
+- id: migrate-down
+  name: migrate down
+  entry: migrate-down
+  language: golang
+  description: >
+    Migrate downwards for integration and performance tests with GoLang Migrate CLI and local MySQL
+    Requires:
+      - https://github.com/golang-migrate/migrate
+      - Migration files on tools/mysql/
+    Environment variables:
+      - DATABASE_TEST, eg; root:root@/test
+      - MIGRATE_PATH, eg; tools/mysql
+  fail_fast: true
+  stages: [pre-commit]

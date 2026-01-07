@@ -1,0 +1,6 @@
+default_install_hook_types: [commit-msg]
+repos:
+- repo: git@scm.salt.id:salt-library/code-standard/pre-commit-hooks.git
+  rev: v2.0.14
+  hooks:
+  - id: check-commit-message
