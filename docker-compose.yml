@@ -55,6 +55,14 @@ services:
       - JWT_SECRET=dev-jwt-secret-change-me-please-32-chars
     ports:
       - "8083:8083"
+  master-data-service:
+    build: ./services/master-data-service
+    environment:
+      - SERVER_PORT=8084
+      - API_TOKEN=dev-secret-token
+      - JWT_SECRET=dev-jwt-secret-change-me-please-32-chars
+    ports:
+      - "8084:8084"
 
 volumes:
   etcd-data:

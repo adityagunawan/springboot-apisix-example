@@ -168,7 +168,6 @@ Contoh:
 Dokumen ini menjadi acuan baku untuk:
 - Implementasi backend
 - Review arsitektur
-- Eksekusi otomatis oleh AI code generator
 - Pengembangan berkelanjutan
 
 Perubahan arsitektur harus memperbarui dokumen ini.

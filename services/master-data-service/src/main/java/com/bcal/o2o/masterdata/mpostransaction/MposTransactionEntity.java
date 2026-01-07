@@ -1,4 +1,4 @@
-package com.bcal.o2o.mpos.sample;
+package com.bcal.o2o.masterdata.mpostransaction;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

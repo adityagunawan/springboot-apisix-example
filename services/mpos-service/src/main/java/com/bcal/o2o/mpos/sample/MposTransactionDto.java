@@ -9,12 +9,4 @@ public record MposTransactionDto(
     BigDecimal amount,
     String status,
     LocalDate businessDate) {
-  public static MposTransactionDto fromEntity(MposTransactionEntity entity) {
-    return new MposTransactionDto(
-        entity.getId(),
-        entity.getReference(),
-        entity.getAmount(),
-        entity.getStatus(),
-        entity.getBusinessDate());
-  }
 }

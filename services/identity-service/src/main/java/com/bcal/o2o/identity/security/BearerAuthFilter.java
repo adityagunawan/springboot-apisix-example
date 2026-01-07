@@ -61,10 +61,11 @@ public class BearerAuthFilter extends OncePerRequestFilter {
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-    // Allow login, health, and preflight requests without auth
+    // Allow login, registration, health, and preflight requests without auth
     String path = request.getRequestURI();
     return "OPTIONS".equalsIgnoreCase(request.getMethod())
         || path.startsWith("/auth/login")
+        || path.startsWith("/auth/register")
         || path.startsWith("/actuator")
         || path.startsWith("/h2-console");
   }

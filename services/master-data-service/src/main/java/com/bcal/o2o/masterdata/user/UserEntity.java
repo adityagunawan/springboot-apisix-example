@@ -1,4 +1,4 @@
-package com.bcal.o2o.identity.user;
+package com.bcal.o2o.masterdata.user;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +16,7 @@ public class UserEntity {
 
   private String name;
   private String email;
+  private String passwordHash;
   private String organization;
 
   public Long getId() {
@@ -48,5 +49,13 @@ public class UserEntity {
 
   public void setOrganization(String organization) {
     this.organization = organization;
+  }
+
+  public String getPasswordHash() {
+    return passwordHash;
+  }
+
+  public void setPasswordHash(String passwordHash) {
+    this.passwordHash = passwordHash;
   }
 }
