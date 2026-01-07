@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: identity-service
+server:
+  port: ${SERVER_PORT:8081}
+
+security:
+  api-token: ${API_TOKEN:dev-secret-token}
+  jwt-secret: ${JWT_SECRET:dev-jwt-secret-change-me-please-32-chars}
+
+master-data-service:
+  url: ${MASTER_DATA_SERVICE_URL:http://localhost:8084}
+
