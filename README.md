@@ -19,9 +19,15 @@ docker compose up -d --build
 ```bash
 docker compose ps
 ```
-3) Daftarkan upstream & route di APISIX  
-   - Bash/WSL: `./scripts/create-routes.sh`  
-   - PowerShell: `pwsh -File .\\scripts\\create-routes.ps1`
+3) Daftarkan upstream & route di APISIX
+   **Untuk deployment FULL DOCKER (semua service di Docker):**
+   - Bash/WSL: `./scripts/create-routes-docker.sh`  
+   - PowerShell: `pwsh -File .\scripts\create-routes-docker.ps1`
+
+   **Untuk deployment MIXED (service lokal + APISIX Docker):**
+   - Bash/WSL: `./scripts/create-routes-local.sh`
+   - PowerShell: `pwsh -File .\scripts\create-routes-local.ps1`
+
    - Admin URL default: `http://localhost:9180/apisix/admin`
    - Admin key default: `myadminkey` (lihat `apisix/config.yaml`)
 
@@ -105,11 +111,13 @@ mvn spring-boot:run
 
 #### 6. Daftarkan route di APISIX
 ```bash
-# Setelah semua service jalan, registrasi route
-./scripts/create-routes.sh
+# Untuk service LOKAL + APISIX Docker, gunakan script khusus:
+./scripts/create-routes-local.sh
 
 # Atau PowerShell:
-# pwsh -File .\scripts\create-routes.ps1
+# pwsh -File .\scripts\create-routes-local.ps1
+
+# JANGAN gunakan create-routes-docker.sh karena itu untuk full Docker!
 ```
 
 #### 7. Test koneksi
@@ -133,10 +141,12 @@ curl -X POST http://localhost:9080/auth/login \
 - Pastikan tidak ada konflik port dengan aplikasi lain
 
 ## Struktur penting
-- `docker-compose.yml` — orkestrasi APISIX, etcd, dan ketiga service.
+- `docker-compose.yml` — orkestrasi APISIX, etcd, dan keempat service.
 - `apisix/config.yaml` — konfigurasi APISIX admin & koneksi etcd.
-- `scripts/create-routes.sh` — registrasi upstream/route di APISIX.
-- `services/identity-service`, `services/cms-service`, `services/mpos-service` — kode Spring Boot.
+- `scripts/create-routes-docker.sh|.ps1` — route script untuk full Docker deployment.
+- `scripts/create-routes-local.sh|.ps1` — route script untuk service lokal + APISIX Docker.
+- `scripts/create-routes.sh|.ps1` — script lama (sama dengan docker version).
+- `services/identity-service`, `services/cms-service`, `services/mpos-service`, `services/master-data-service` — kode Spring Boot.
 
 ## Catatan
 - Header `Authorization: Bearer <token>` wajib untuk semua endpoint selain `/auth/login` dan `/actuator`.
@@ -144,4 +154,17 @@ curl -X POST http://localhost:9080/auth/login \
 - Port etcd tidak diekspos ke host (menghindari bentrok port 2379 Windows); APISIX mengakses langsung lewat jaringan internal Docker.
 - JWT secret default: `JWT_SECRET=dev-jwt-secret-change-me-please-32-chars` (set di `docker-compose.yml`); gunakan nilai minimal 32 karakter untuk HS256.
 - Ketiga service kini memakai H2 in-memory + Spring Data JPA; data awal ada di `src/main/resources/data.sql`.
-- Untuk debugging service secara terpisah, Anda bisa hanya menyalakan APISIX + etcd dengan `docker compose up -d etcd apisix`, jalankan service Spring Boot secara lokal (mvn spring-boot:run), lalu jalankan skrip route.
+- Untuk debugging service secara terpisah, Anda bisa hanya menyalakan APISIX + etcd dengan `docker compose up -d etcd apisix`, jalankan service Spring Boot secara lokal (mvn spring-boot:run), lalu jalankan `scripts/create-routes-local.sh`.
+
+## Pemilihan Script Route
+
+| Deployment Mode | Script yang Digunakan | Keterangan |
+|-----------------|----------------------|------------|
+| **Full Docker** | `create-routes-docker.sh/.ps1` | Semua service berjalan di Docker |
+| **Mixed (Lokal + APISIX Docker)** | `create-routes-local.sh/.ps1` | Service lokal, APISIX di Docker |
+| **Legacy** | `create-routes.sh/.ps1` | Sama dengan docker version |
+
+### ⚠️ Penting:
+- **Jangan salah pilih script** - akan menyebabkan error 503
+- **Full Docker**: gunakan service name (`identity-service:8081`)
+- **Mixed Mode**: gunakan `host.docker.internal:8081`
