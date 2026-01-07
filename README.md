@@ -50,24 +50,87 @@ curl http://localhost:9080/auth/profile \
 ```
 
 ## Menjalankan service langsung (opsional, tanpa Docker)
+
+### Prasyarat
+- Java 21 & Maven terinstall
+- Docker untuk menjalankan APISIX + etcd
+
+### Langkah-langkah:
+
+#### 1. Jalankan APISIX + etcd via Docker
 ```bash
-# Terminal 1
+# Hanya jalankan APISIX dan etcd, tanpa service Spring Boot
+docker compose up -d etcd apisix
+```
+
+#### 2. Jalankan master-data-service (port 8084)
+```bash
+# Terminal 1 - Master Data Service (harus jalan dulu)
+cd services/master-data-service
+mvn spring-boot:run
+
+# Atau dengan environment variable custom:
+# SERVER_PORT=8084 mvn spring-boot:run
+```
+
+#### 3. Jalankan identity-service (port 8081)  
+```bash
+# Terminal 2 - Identity Service
 cd services/identity-service
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
+mvn spring-boot:run
 
-# Terminal 2
-cd services/cms-service
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-
-# Terminal 3
-cd services/mpos-service
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
+# Dengan custom config:
+# SERVER_PORT=8081 API_TOKEN=dev-secret-token MASTER_DATA_SERVICE_URL=http://localhost:8084 mvn spring-boot:run
 ```
-Gunakan env var bila perlu:
+
+#### 4. Jalankan cms-service (port 8082)
 ```bash
-SERVER_PORT=8081 API_TOKEN=dev-secret-token mvn spring-boot:run
+# Terminal 3 - CMS Service  
+cd services/cms-service
+mvn spring-boot:run
+
+# Dengan custom config:
+# SERVER_PORT=8082 API_TOKEN=dev-secret-token mvn spring-boot:run
 ```
-Gateway APISIX tetap harus dijalankan via Docker agar routing berjalan, lalu jalankan `scripts/create-routes.sh` seperti di atas.
+
+#### 5. Jalankan mpos-service (port 8083)
+```bash
+# Terminal 4 - MPOS Service
+cd services/mpos-service  
+mvn spring-boot:run
+
+# Dengan custom config:
+# SERVER_PORT=8083 API_TOKEN=dev-secret-token mvn spring-boot:run
+```
+
+#### 6. Daftarkan route di APISIX
+```bash
+# Setelah semua service jalan, registrasi route
+./scripts/create-routes.sh
+
+# Atau PowerShell:
+# pwsh -File .\scripts\create-routes.ps1
+```
+
+#### 7. Test koneksi
+```bash
+# Cek semua service aktif
+curl http://localhost:8081/actuator/health  # identity-service
+curl http://localhost:8082/actuator/health  # cms-service  
+curl http://localhost:8083/actuator/health  # mpos-service
+curl http://localhost:8084/actuator/health  # master-data-service
+
+# Test login via gateway APISIX (port 9080)
+curl -X POST http://localhost:9080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"password"}'
+```
+
+### Catatan Penting:
+- **Urutan start service penting**: master-data-service harus jalan dulu sebelum identity-service
+- Service akan berjalan di port default: master-data (8084), identity (8081), cms (8082), mpos (8083)  
+- Gateway APISIX tetap di port 9080 untuk akses eksternal
+- Pastikan tidak ada konflik port dengan aplikasi lain
 
 ## Struktur penting
 - `docker-compose.yml` — orkestrasi APISIX, etcd, dan ketiga service.
